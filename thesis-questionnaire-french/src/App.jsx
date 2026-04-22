@@ -337,7 +337,7 @@ export default function App() {
               ))}
             </div>
 
-            <label style={label}>2. Quel est votre <strong>dernier<strong> niveau d'étude ?</label>
+            <label style={label}>2. Quel est votre <strong>dernier</strong> niveau d'étude ?</label>
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
               {["Lycée","BTS / DUT","Licence","Master","Doctorat","Préfère ne pas répondre"].map(a => (
                 <button key={a} onClick={() => setBackground(a)} style={{ ...choiceBtn(background===a), textAlign:"left" }}>{a}</button>
