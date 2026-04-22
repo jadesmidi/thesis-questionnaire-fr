@@ -9,13 +9,19 @@ function ordinal(n) {
   return s[n] || `${n+1}e`;
 }
 
+const SHEET_URL = "https://script.google.com/macros/library/d/1eHDvNfNefDje3oPO9bX7fmu_i48snibQxwUJzwRXY0lxKnTcQc_mVsL8/1";
+
 async function saveResponse(data) {
-  const existing = await loadResponses();
-  existing.push({ ...data, id: Date.now(), submittedAt: new Date().toISOString() });
-  await window.storage.set(STORAGE_KEY, JSON.stringify(existing), true);
-}
-async function loadResponses() {
-  try { const r = await window.storage.get(STORAGE_KEY, true); return r ? JSON.parse(r.value) : []; } catch { return []; }
+  try {
+    await fetch(SHEET_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch (error) {
+    console.error("Failed to save:", error);
+  }
 }
 
 // ─── Slider ───────────────────────────────────────────────────────────────────
@@ -326,7 +332,7 @@ export default function App() {
 
             <label style={label}>1. Quel est votre âge ?</label>
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-              {["18","19","20","21","22","23","24","25","25+","Préfère ne pas répondre"].map(a => (
+              {["<18","18-20","21-25","26-30","31-40","40+","Préfère ne pas répondre"].map(a => (
                 <button key={a} onClick={() => setAge(a)} style={choiceBtn(age===a)}>{a}</button>
               ))}
             </div>
