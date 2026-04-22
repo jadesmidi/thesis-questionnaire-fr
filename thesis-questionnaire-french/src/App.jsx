@@ -16,14 +16,17 @@ function ordinal(n) {
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbwM6DCkPoysghbQt1dJM0BMJh4Kbif2fai0rqivil5pkOGj5CbNZBq-Y1LdAEC_nkH0/exec";
 
 async function saveResponse(data) {
-  await fetch(SHEET_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    await fetch(SHEET_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch (error) {
+    console.error("Failed to save:", error);
+  }
 }
-
 // ─── Slider Component ─────────────────────────────────────────────────────────
 
 function ApprovalSlider({ party, value, onChange }) {
