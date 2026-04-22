@@ -306,7 +306,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Bonjour ! 👋</h2>
             <div style={{ background:"linear-gradient(135deg,#f0f1ff,#f8f0ff)", borderRadius:14, padding:24, marginBottom:24 }}>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:0 }}>
-                Je m'appelle Jade et dans le cadre de mon mémoire de licence en <strong>Intelligence Artificielle</strong>, je recherche quelle coalition est la plus faisable et avec laquelle le plus grand nombre de personnes serait satisfait, sur la base des préférences et classements individuels des partis politiques. En participant, je collecte des données pour tester <strong>différentes méthodes et règles</strong> de formation de coalitions. Votre participation m'aide énormément !
+                Je m'appelle Jade et dans le cadre de mon mémoire de licence en <strong>Intelligence Artificielle</strong>, je recherche sur l'agrégation et l'élévation des préférences individuelles et des classements des partis politiques vers une coalition la plus faisable possible. En participant, je collecte des données pour tester <strong>différentes méthodes et règles</strong> de formation de coalitions. Votre participation m'aide énormément !
               </p>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:"12px 0 0" }}>⏱️ Participer ne prend que <strong>5 minutes environ</strong>.</p>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:"12px 0 0" }}>🔒 <strong>Toutes vos réponses restent totalement anonymes</strong> et seront utilisées uniquement dans le cadre de mon mémoire de licence.</p>
@@ -328,7 +328,7 @@ export default function App() {
         {page === 1 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Questions Personnelles</h2>
-            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:24 }}>Partie 2 sur 5 · Veuillez répondre aux questions suivantes.</p>
+            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:24 }}>Partie 1 sur 4 · Veuillez répondre aux questions suivantes.</p>
 
             <label style={label}>1. Quel est votre âge ?</label>
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
@@ -361,45 +361,11 @@ export default function App() {
           </div>
         )}
 
-        {/* PAGE 2 — Party familiarity */}
+        {/* PAGE 2 — Ranking + Approval */}
         {page === 2 && (
           <div>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Connaissance des Partis</h2>
-            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 3 sur 5</p>
-            <p style={{ fontSize:15, lineHeight:1.7, color:"#1a1a2e", marginBottom:24 }}>
-              Pour cette étude, j'utilise les 8 plus grands partis de France. Indiquez lesquels vous connaissez ou dont vous avez entendu parler. Ne vous inquiétez pas si vous ne connaissez pas un parti — soyez simplement honnête !
-            </p>
-            <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-              {PARTIES.map(party => {
-                const val = familiarite[party];
-                return (
-                  <div key={party} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 18px", borderRadius:10, border:"2px solid #e2e4ef", background:"white" }}>
-                    <span style={{ fontFamily:"'DM Sans',sans-serif", fontWeight:600, fontSize:15, color:"#1a1a2e" }}>{party}</span>
-                    <div style={{ display:"flex", gap:8 }}>
-                      <button onClick={() => setFamiliarite(b => ({...b,[party]:"oui"}))} style={choiceBtn(val==="oui")}>Oui ✓</button>
-                      <button onClick={() => setFamiliarite(b => ({...b,[party]:"non"}))} style={choiceBtn(val==="non", true)}>Non ✗</button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            {Object.values(familiarite).includes("non") && (
-              <div style={{ marginTop:16, background:"#fffbeb", border:"2px solid #fbbf24", borderRadius:10, padding:"12px 16px", fontSize:13, color:"#92400e", fontFamily:"'DM Sans',sans-serif" }}>
-                💡 Pas de souci ! Les partis que vous ne connaissez pas resteront dans le questionnaire, mais votre réponse sera notée séparément.
-              </div>
-            )}
-            <div style={{ display:"flex", gap:12, marginTop:28 }}>
-              <button onClick={() => setPage(1)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
-              <button disabled={!familiariteComplete} onClick={() => setPage(3)} style={btnStyle(!familiariteComplete)}>Suivant →</button>
-            </div>
-          </div>
-        )}
-
-        {/* PAGE 3 — Ranking + Approval */}
-        {page === 3 && (
-          <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Vos Préférences</h2>
-            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 4 sur 5 · Pour cette expérience, j'ai sélectionné les <strong>8 plus grands partis de France</strong>.</p>
+            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 2 sur 4 · Pour cette expérience, j'ai sélectionné les <strong>8 plus grands partis de France</strong>.</p>
 
             <label style={label}>1. Quel est votre classement des partis proposés ?</label>
             <p style={{ color:"#8b8fa8", fontSize:13, marginBottom:12 }}>Cliquez sur un parti pour l'ajouter à votre classement. Faites ensuite glisser pour ajuster l'ordre. Vous devez classer tous les partis pour continuer.</p>
@@ -418,8 +384,8 @@ export default function App() {
           </div>
         )}
 
-        {/* PAGE 4 — Coalition Comparisons */}
-        {page === 4 && (
+        {/* PAGE 3 — Coalition Comparisons */}
+        {page === 3 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Comparaisons de Coalitions</h2>
             <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Les ensembles ci-dessous sont personnalisés selon votre classement. Les chiffres (1, 2, 3…) correspondent à votre <strong>{ordinal(0)}, {ordinal(1)}, {ordinal(2)}…</strong> choix.</p>
@@ -449,8 +415,8 @@ export default function App() {
           </div>
         )}
 
-        {/* PAGE 5 — Feedback */}
-        {page === 5 && (
+        {/* PAGE 4 — Feedback */}
+        {page === 4 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Questions ou Commentaires ?</h2>
             <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:24 }}>Avez-vous des questions, remarques ou commentaires sur cette étude ? N'hésitez pas à les laisser ci-dessous. C'est entièrement optionnel.</p>
