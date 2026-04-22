@@ -24,15 +24,6 @@ async function saveResponse(data) {
   });
 }
 
-async function loadResponses() {
-  try {
-    const r = await window.storage.get(STORAGE_KEY, true);
-    return r ? JSON.parse(r.value) : [];
-  } catch {
-    return [];
-  }
-}
-
 // ─── Slider Component ─────────────────────────────────────────────────────────
 
 function ApprovalSlider({ party, value, onChange }) {
