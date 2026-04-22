@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-const PARTIES = ["Renaissance", "LR", "Les Écologistes", "PS", "Horizons", "RN", "Reconquête", "DLF"];
-const FR_VOTE_OPTIONS = ["Renaissance","RN","LFI / NFP","PS","LR","Les Écologistes","Horizons","Reconquête","DLF","PCF","Parti Animaliste","UDI","Divers gauche","Divers droite","N'a pas voté","Blanc","Préfère ne pas répondre","Autre"];
+const PARTIES = ["Ensemble pour le République", "Les Républicains", "Les Écologistes", "PS", "PCF", "Rassemblement National", "Reconquête", "LFI"];
+const FR_VOTE_OPTIONS = ["Renaissance","Rassemblement National","LFI / NFP","PS","LR","Les Écologistes","Horizons","Reconquête","DLF","PCF","Parti Animaliste","UDI","Divers gauche","Divers droite","N'a pas voté","Blanc","Préfère ne pas répondre","Autre"];
 const STORAGE_KEY = "thesis_responses_fr";
 
 function ordinal(n) {
@@ -306,7 +306,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Bonjour ! 👋</h2>
             <div style={{ background:"linear-gradient(135deg,#f0f1ff,#f8f0ff)", borderRadius:14, padding:24, marginBottom:24 }}>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:0 }}>
-                Je m'appelle Jade et dans le cadre de mon mémoire de licence en <strong>Intelligence Artificielle</strong>, je recherche sur l'agrégation et l'élévation des préférences individuelles et des classements des partis politiques vers une coalition la plus faisable possible. En participant, je collecte des données pour tester <strong>différentes méthodes et règles</strong> de formation de coalitions. Votre participation m'aide énormément !
+                Je m'appelle Jade et dans le cadre de ma licence en Intelligence Artificielle, j'écris un mémoire sur l'agrégation de préférences et le lien entre les préférences sur les partis politiques et les préférences sur les coalitions de gouvernement. Je collecte pour ce mémoire des données pour tester et évaluer différentes méthodes et règles de formation de coalitions. Votre participation m'aide énormément!
               </p>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:"12px 0 0" }}>⏱️ Participer ne prend que <strong>5 minutes environ</strong>.</p>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:"12px 0 0" }}>🔒 <strong>Toutes vos réponses restent totalement anonymes</strong> et seront utilisées uniquement dans le cadre de mon mémoire de licence.</p>
@@ -337,9 +337,9 @@ export default function App() {
               ))}
             </div>
 
-            <label style={label}>2. Quel est votre niveau d'études ?</label>
+            <label style={label}>2. Quel est votre <strong>dernier<strong> niveau d'étude ?</label>
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-              {["Lycée","BTS / DUT","Licence","Master","Doctorat","En activité professionnelle","Préfère ne pas répondre"].map(a => (
+              {["Lycée","BTS / DUT","Licence","Master","Doctorat","Préfère ne pas répondre"].map(a => (
                 <button key={a} onClick={() => setBackground(a)} style={{ ...choiceBtn(background===a), textAlign:"left" }}>{a}</button>
               ))}
             </div>
@@ -365,14 +365,14 @@ export default function App() {
         {page === 2 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Vos Préférences</h2>
-            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 2 sur 4 · Pour cette expérience, j'ai sélectionné les <strong>8 plus grands partis de France</strong>.</p>
+            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 2 sur 4 · Pour cette expérience, j'ai selectionné 8 des plus grands partis de France.</p>
 
             <label style={label}>1. Quel est votre classement des partis proposés ?</label>
             <p style={{ color:"#8b8fa8", fontSize:13, marginBottom:12 }}>Cliquez sur un parti pour l'ajouter à votre classement. Faites ensuite glisser pour ajuster l'ordre. Vous devez classer tous les partis pour continuer.</p>
             <RankingList ranking={ranking} setRanking={setRanking} pool={pool} setPool={setPool} />
 
-            <label style={{ ...label, marginTop:36 }}>2. Quel est votre taux d'approbation de ces partis ?</label>
-            <p style={{ color:"#8b8fa8", fontSize:13, marginBottom:20 }}><strong>−5</strong> = je ne voudrais vraiment pas ce parti dans la coalition &nbsp;·&nbsp; <strong>0</strong> = neutre &nbsp;·&nbsp; <strong>+5</strong> = je voudrais vraiment ce parti dans la coalition</p>
+            <label style={{ ...label, marginTop:36 }}>2. Quel est votre niveau d'approbation de ces partis ?</label>
+            <p style={{ color:"#8b8fa8", fontSize:13, marginBottom:20 }}><strong>−5</strong> = je ne voudrais vraiment pas ce parti dans une coalition gouvernementale &nbsp;·&nbsp; <strong>0</strong> = neutre &nbsp;·&nbsp; <strong>+5</strong> = je voudrais vraiment ce parti dans la coalition</p>
             <div style={{ marginBottom:32 }}>
               {PARTIES.map(p => <ApprovalSlider key={p} party={p} value={approvals[p]} onChange={v => setApprovals(prev => ({...prev,[p]:v}))} />)}
             </div>
