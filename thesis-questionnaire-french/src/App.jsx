@@ -276,7 +276,7 @@ export default function App() {
     setSaving(true);
     await saveResponse({ age, background, lastVote, lastVoteOther, voteCommentaire, familiarite, ranking, approvals, c_party: c, coal_attention:coal0, coal_1:coal1, coal_2:coal2, coal_3:coal3, coal_4:coal4, coal_A:coalA, coal_B:coalB, coal_5:coal5, coal_C:coalC, coal_D:coalD, coal_E:coalE, feedback });
     setSaving(false);
-    setPage(5);
+    setPage(6);
   };
 
   const btnStyle = (disabled) => ({ padding:"14px 32px", borderRadius:10, border:"none", background:disabled?"#dde0ef":"linear-gradient(135deg,#6366f1,#818cf8)", color:disabled?"#a0a3b8":"white", fontFamily:"'DM Sans',sans-serif", fontWeight:700, fontSize:15, cursor:disabled?"not-allowed":"pointer", boxShadow:disabled?"none":"0 4px 16px rgba(99,102,241,0.3)", transition:"all 0.2s" });
@@ -310,7 +310,7 @@ export default function App() {
       )}
 
       <div style={card}>
-        {page < 6 && <ProgressBar step={page} total={5} />}
+        {page < 7 && <ProgressBar step={page} total={6} />}
 
         {/* PAGE 0 — Consent */}
         {page === 0 && (
@@ -452,9 +452,21 @@ export default function App() {
             </div>
           </div>
         )}
-
-        {/* PAGE 4 — Feedback */}
+        
+        {/* PAGE 4 — Ideal Coalition */}
         {page === 4 && (
+          <IdealCoalitionPage
+            parties={PARTIES}
+            idealCoalition={idealCoalition}
+            setIdealCoalition={setIdealCoalition}
+            onBack={() => setPage(3)}
+            onNext={() => setPage(5)}
+            btnStyle={btnStyle}
+          />
+        )}
+
+        {/* PAGE 5 — Feedback */}
+        {page === 5 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Questions ou Commentaires ?</h2>
             <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:24 }}>Avez-vous des questions, remarques ou commentaires sur cette étude ? N'hésitez pas à les laisser ci-dessous. C'est entièrement optionnel.</p>
@@ -467,8 +479,8 @@ export default function App() {
           </div>
         )}
 
-        {/* PAGE 5 — Done */}
-        {page === 5 && (
+        {/* PAGE 6 — Done */}
+        {page === 6 && (
           <div style={{ textAlign:"center", padding:"20px 0" }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🎓</div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:26, color:"#1a1a2e" }}>Merci !</h2>
