@@ -581,7 +581,7 @@ export default function App() {
           <div style={{ textAlign:"center", padding:"20px 0" }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🎓</div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:26, color:"#1a1a2e" }}>Merci !</h2>
-            <p style={{ color:"#8b8fa8", fontSize:15, lineHeight:1.75 }}>Vos réponses ont été enregistrées de manière anonyme et seront utilisées dans le cadre de mon mémoire de licence sur la faisabilité des coalitions.<br /><br />Merci beaucoup pour votre précieuse participation ! 🙏</p>
+            <p style={{ color:"#8b8fa8", fontSize:15, lineHeight:1.75 }}>Vos réponses ont été enregistrées de manière anonyme et seront utilisées dans le cadre de mon mémoire de licence sur la faisabilité des coalitions.<br /><br />N'hésitez pas à partager cela avec vos amis, votre famille et vos collègues! Merci beaucoup pour votre précieuse participation 🙏</p>
             <div style={{ marginTop:24, padding:"16px 20px", background:"#f0f1ff", borderRadius:10, fontSize:14, color:"#6366f1", fontWeight:600 }}>Vous pouvez fermer cet onglet.</div>
           </div>
         )}
