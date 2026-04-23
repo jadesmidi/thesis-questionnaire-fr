@@ -488,7 +488,7 @@ export default function App() {
         {page === 2 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Vos Préférences</h2>
-            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 2 sur 4 · Pour cette expérience, j'ai selectionné 8 des plus grands partis de France.</p>
+            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Partie 2 sur 4 · Pour cette expérience, j'ai selectionné 8 grands partis de France.</p>
 
             <label style={label}>1. Quel est votre classement des partis proposés ?</label>
             <p style={{ color:"#8b8fa8", fontSize:13, marginBottom:12 }}>Cliquez sur un parti pour l'ajouter à votre classement. Faites ensuite glisser pour ajuster l'ordre. Vous devez classer tous les partis pour continuer.</p>
@@ -511,7 +511,7 @@ export default function App() {
         {page === 3 && (
           <div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Comparaisons de Coalitions</h2>
-            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Les ensembles ci-dessous sont personnalisés selon votre classement. Les chiffres (1, 2, 3…) correspondent à votre <strong>{ordinal(0)}, {ordinal(1)}, {ordinal(2)}…</strong> choix.</p>
+            <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:8 }}>Voici un rappel de votre classement :</p>
             <div style={{ background:"#f4f5fb", borderRadius:10, padding:"10px 14px", marginBottom:24, fontSize:13, color:"#6366f1", fontFamily:"'DM Mono',monospace" }}>
               1={r[0]} · 2={r[1]} · 3={r[2]} · 4={r[3]} · 5={r[4]} · 6={r[5]} · 7={r[6]} · 8={r[7]}
             </div>
@@ -534,20 +534,6 @@ export default function App() {
 
             {c && (
               <div style={{ borderTop:"1px solid #eee", paddingTop:24, marginTop:8 }}>
-                <p style={{ fontSize:14, color:"#8b8fa8", marginBottom:8 }}>
-                  Les questions suivantes utilisent une variable personnalisée <strong style={{ fontFamily:"'DM Mono',monospace", color:"#6366f1" }}>c</strong> — le parti que vous désapprouvez le moins parmi ceux avec un score négatif.
-                </p>
-                <div style={{ background:"#f4f5fb", borderRadius:10, padding:"10px 14px", marginBottom:20, fontSize:13, color:"#6366f1", fontFamily:"'DM Mono',monospace" }}>
-                  c = {c} (approbation : {approvals[c] > 0 ? `+${approvals[c]}` : approvals[c]})
-                  {PARTIES.filter(p => approvals[p] < 0).length === 0 && (
-                    <span style={{ color:"#f59e0b" }}> — aucun parti négatif, on utilise votre dernier classé</span>
-                  )}
-                </div>
-                {c === r[0] || c === r[1] || c === r[2] ? (
-                  <div style={{ background:"#fffbeb", border:"2px solid #fbbf24", borderRadius:10, padding:"12px 16px", fontSize:13, color:"#92400e", fontFamily:"'DM Sans',sans-serif", marginBottom:16 }}>
-                    ⚠️ Note : pour vous, c coïncide avec l'un des partis déjà présents dans ces questions. Vos réponses seront notées mais exclues de l'analyse correspondante.
-                  </div>
-                ) : null}
                 <CoalitionChoice
                   question={`Question 9 : {${r[0]}: 70%, ${c}: 30%} ou {${r[1]}: 50%, ${r[2]}: 50%} ?`}
                   optionA={`{${r[0]}: 70%, ${c}: 30%}`}
