@@ -348,7 +348,7 @@ export default function App() {
             <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
               {FR_VOTE_OPTIONS.map(a => (
                 <button key={a} onClick={() => { setLastVote(a); if(a!=="Autre") setLastVoteOther(""); }} style={choiceBtn(lastVote===a)}>{a}</button>
-              ))}page
+              ))}
             </div>
             {lastVote === "Autre" && (
               <input style={inputStyle} placeholder="Précisez..." value={lastVoteOther} onChange={e => setLastVoteOther(e.target.value)} />
