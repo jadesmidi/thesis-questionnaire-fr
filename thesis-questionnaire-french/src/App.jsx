@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-const PARTIES = ["Ensemble pour le République", "Les Républicains", "Les Écologistes", "PS", "PCF", "Rassemblement National", "Reconquête", "LFI"];
-const FR_VOTE_OPTIONS = ["Renaissance","Rassemblement National","LFI / NFP","PS","LR","Les Écologistes","Horizons","Reconquête","DLF","PCF","Parti Animaliste","UDI","Divers gauche","Divers droite","N'a pas voté","Blanc","Préfère ne pas répondre","Autre"];
+const PARTIES = ["Renaissance", "Les Républicains", "Les Écologistes", "PS", "PCF", "Rassemblement National", "Reconquête", "LFI"];
+const FR_VOTE_OPTIONS = ["Renaissance","Rassemblement National","LFI","PS","LR","Les Écologistes","Horizons","Reconquête","DLF","PCF","Parti Animaliste","UDI","Divers gauche","Divers droite","N'a pas voté","Blanc","Préfère ne pas répondre","Autre"];
 const STORAGE_KEY = "thesis_responses_fr";
 
 function ordinal(n) {
@@ -9,7 +9,7 @@ function ordinal(n) {
   return s[n] || `${n+1}e`;
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycby4ZbnydBaWX-QdenpfcPOTxZCw3q1G4HuqMnKud1va8MZLPZePkuSqcjNm3Ia-Rsza/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxOvyHjabpaO1_4FFz77RfqnswPl9XFlQoVyuUJMmCvEIscwVO14lTU6in5NPDdItt1/exec";
 
 async function saveResponse(data) {
   try {
@@ -256,13 +256,25 @@ export default function App() {
   const [coalB, setCoalB] = useState("");
   const [coal5, setCoal5] = useState("");
   const [coalC, setCoalC] = useState("");
+  const [coalD, setCoalD] = useState(""); // {1, c} vs {2, 3}
+  const [coalE, setCoalE] = useState(""); // {1: 70%, c: 30%} vs {2: 50%, 3: 50%}
   const [feedback, setFeedback] = useState("");
 
   const r = ranking;
 
+  // c = party with approval score closest to 0 from below (least negative)
+  // fallback: if no party has negative approval, use r[7] (last ranked)
+  const c = (() => {
+    const negParties = PARTIES.filter(p => approvals[p] < 0);
+    if (negParties.length === 0) return r[7] || "";
+    return negParties.reduce((best, p) =>
+      approvals[p] > approvals[best] ? p : best
+    , negParties[0]);
+  })();
+
   const handleSubmit = async () => {
     setSaving(true);
-    await saveResponse({ age, background, lastVote, lastVoteOther, voteCommentaire, familiarite, ranking, approvals, coal_attention:coal0, coal_1:coal1, coal_2:coal2, coal_3:coal3, coal_4:coal4, coal_A:coalA, coal_B:coalB, coal_5:coal5, coal_C:coalC, feedback });
+    await saveResponse({ age, background, lastVote, lastVoteOther, voteCommentaire, familiarite, ranking, approvals, c_party: c, coal_attention:coal0, coal_1:coal1, coal_2:coal2, coal_3:coal3, coal_4:coal4, coal_A:coalA, coal_B:coalB, coal_5:coal5, coal_C:coalC, coal_D:coalD, coal_E:coalE, feedback });
     setSaving(false);
     setPage(5);
   };
@@ -306,7 +318,7 @@ export default function App() {
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Bonjour ! 👋</h2>
             <div style={{ background:"linear-gradient(135deg,#f0f1ff,#f8f0ff)", borderRadius:14, padding:24, marginBottom:24 }}>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:0 }}>
-                Je m'appelle Jade et dans le cadre de ma licence en Intelligence Artificielle, j'écris un mémoire sur l'agrégation de préférences et le lien entre les préférences sur les partis politiques et les préférences sur les coalitions de gouvernement. Je collecte pour ce mémoire des données pour tester et évaluer différentes méthodes et règles de formation de coalitions. Votre participation m'aide énormément!
+                Je m'appelle Jade et dans le cadre de ma licence en Intelligence Artificielle à l'Université d'Amsterdam, j'écris un mémoire sur l'agrégation de préférences et le lien entre les préférences sur les partis politiques et les préférences sur les coalitions de gouvernement. Je collecte pour ce mémoire des données pour tester et évaluer différentes méthodes et règles de formation de coalitions. Votre participation m'aide énormément!
               </p>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:"12px 0 0" }}>⏱️ Participer ne prend que <strong>5 minutes environ</strong>.</p>
               <p style={{ fontSize:15, lineHeight:1.75, color:"#1a1a2e", margin:"12px 0 0" }}>🔒 <strong>Toutes vos réponses restent totalement anonymes</strong> et seront utilisées uniquement dans le cadre de mon mémoire de licence.</p>
@@ -406,11 +418,37 @@ export default function App() {
             <div style={{ borderTop:"1px solid #eee", paddingTop:24, marginTop:8 }}>
               <p style={{ fontSize:14, color:"#8b8fa8", marginBottom:16 }}>Les questions suivantes tiennent également compte de <strong>l'influence des partis</strong> dans la coalition :</p>
               <CoalitionChoice question={`Question 7 : {${r[0]} (20%), ${r[2]} (80%)} ou {${r[0]} (60%), ${r[5]} (40%)} ?`} optionA={`{${r[0]}: 20%, ${r[2]}: 80%}`} optionB={`{${r[0]}: 60%, ${r[5]}: 40%}`} value={coal5} onChange={setCoal5} />
-              <CoalitionChoice question={`Question 8 : {${r[2]} (50%), ${r[3]} (50%)} ou {${r[0]} (50%), ${r[7]} (50%)} ?`} optionA={`{${r[2]}: 50%, ${r[3]}: 50%}`} optionB={`{${r[0]}: 50%, ${r[7]}: 50%}`} value={coalC} onChange={setCoalC} />
+              <CoalitionChoice question={`Question 8 : {${r[0]}: 90%, ${r[1]}: 10%} ou {${r[0]}: 50%, ${r[1]}: 50%} ?`} optionA={`{${r[0]}: 90%, ${r[1]}: 10%}`} optionB={`{${r[0]}: 50%, ${r[1]}: 50%}`} value={coalC} onChange={setCoalC} />
             </div>
+
+            {c && (
+              <div style={{ borderTop:"1px solid #eee", paddingTop:24, marginTop:8 }}>
+                <p style={{ fontSize:14, color:"#8b8fa8", marginBottom:8 }}>
+                  Les questions suivantes utilisent une variable personnalisée <strong style={{ fontFamily:"'DM Mono',monospace", color:"#6366f1" }}>c</strong> — le parti que vous désapprouvez le moins parmi ceux avec un score négatif.
+                </p>
+                <div style={{ background:"#f4f5fb", borderRadius:10, padding:"10px 14px", marginBottom:20, fontSize:13, color:"#6366f1", fontFamily:"'DM Mono',monospace" }}>
+                  c = {c} (approbation : {approvals[c] > 0 ? `+${approvals[c]}` : approvals[c]})
+                  {PARTIES.filter(p => approvals[p] < 0).length === 0 && (
+                    <span style={{ color:"#f59e0b" }}> — aucun parti négatif, on utilise votre dernier classé</span>
+                  )}
+                </div>
+                {c === r[0] || c === r[1] || c === r[2] ? (
+                  <div style={{ background:"#fffbeb", border:"2px solid #fbbf24", borderRadius:10, padding:"12px 16px", fontSize:13, color:"#92400e", fontFamily:"'DM Sans',sans-serif", marginBottom:16 }}>
+                    ⚠️ Note : pour vous, c coïncide avec l'un des partis déjà présents dans ces questions. Vos réponses seront notées mais exclues de l'analyse correspondante.
+                  </div>
+                ) : null}
+                <CoalitionChoice
+                  question={`Question 9 : {${r[0]}: 70%, ${c}: 30%} ou {${r[1]}: 50%, ${r[2]}: 50%} ?`}
+                  optionA={`{${r[0]}: 70%, ${c}: 30%}`}
+                  optionB={`{${r[1]}: 50%, ${r[2]}: 50%}`}
+                  value={coalE} onChange={setCoalE}
+                />
+              </div>
+            )}
+
             <div style={{ display:"flex", gap:12, marginTop:24 }}>
               <button onClick={() => setPage(2)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
-              <button disabled={!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC} onClick={() => setPage(4)} style={btnStyle(!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC)}>Suivant →</button>
+              <button disabled={!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC||!coalE} onClick={() => setPage(4)} style={btnStyle(!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC||!coalE)}>Suivant →</button>
             </div>
           </div>
         )}
