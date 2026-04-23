@@ -473,7 +473,7 @@ export default function App() {
             <textarea value={feedback} onChange={e => setFeedback(e.target.value)} placeholder="Vous pouvez répondre librement ici..." style={{ ...inputStyle, minHeight:140, resize:"vertical", lineHeight:1.6 }} />
             <p style={{ fontSize:14, color:"#8b8fa8", marginTop:20 }}>Merci beaucoup d'avoir rempli ce questionnaire ! 🎉</p>
             <div style={{ display:"flex", gap:12, marginTop:24 }}>
-              <button onClick={() => setPage(3)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
+              <button onClick={() => setPage(4)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
               <button onClick={handleSubmit} disabled={saving} style={btnStyle(saving)}>{saving?"Enregistrement...":"Envoyer mes réponses 🚀"}</button>
             </div>
           </div>
