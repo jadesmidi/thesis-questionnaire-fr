@@ -264,7 +264,7 @@ export default function App() {
     setSaving(true);
     await saveResponse({ age, background, lastVote, lastVoteOther, voteCommentaire, familiarite, ranking, approvals, coal_attention:coal0, coal_1:coal1, coal_2:coal2, coal_3:coal3, coal_4:coal4, coal_A:coalA, coal_B:coalB, coal_5:coal5, coal_C:coalC, feedback });
     setSaving(false);
-    setPage(6);
+    setPage(5);
   };
 
   const btnStyle = (disabled) => ({ padding:"14px 32px", borderRadius:10, border:"none", background:disabled?"#dde0ef":"linear-gradient(135deg,#6366f1,#818cf8)", color:disabled?"#a0a3b8":"white", fontFamily:"'DM Sans',sans-serif", fontWeight:700, fontSize:15, cursor:disabled?"not-allowed":"pointer", boxShadow:disabled?"none":"0 4px 16px rgba(99,102,241,0.3)", transition:"all 0.2s" });
@@ -348,7 +348,7 @@ export default function App() {
             <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
               {FR_VOTE_OPTIONS.map(a => (
                 <button key={a} onClick={() => { setLastVote(a); if(a!=="Autre") setLastVoteOther(""); }} style={choiceBtn(lastVote===a)}>{a}</button>
-              ))}
+              ))}page
             </div>
             {lastVote === "Autre" && (
               <input style={inputStyle} placeholder="Précisez..." value={lastVoteOther} onChange={e => setLastVoteOther(e.target.value)} />
@@ -378,8 +378,8 @@ export default function App() {
             </div>
 
             <div style={{ display:"flex", gap:12, marginTop:16 }}>
-              <button onClick={() => setPage(2)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
-              <button disabled={ranking.length < PARTIES.length} onClick={() => setPage(4)} style={btnStyle(ranking.length < PARTIES.length)}>Suivant →</button>
+              <button onClick={() => setPage(1)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
+              <button disabled={ranking.length < PARTIES.length} onClick={() => setPage(3)} style={btnStyle(ranking.length < PARTIES.length)}>Suivant →</button>
             </div>
           </div>
         )}
@@ -409,8 +409,8 @@ export default function App() {
               <CoalitionChoice question={`Question 8 : {${r[2]} (50%), ${r[3]} (50%)} ou {${r[0]} (50%), ${r[7]} (50%)} ?`} optionA={`{${r[2]}: 50%, ${r[3]}: 50%}`} optionB={`{${r[0]}: 50%, ${r[7]}: 50%}`} value={coalC} onChange={setCoalC} />
             </div>
             <div style={{ display:"flex", gap:12, marginTop:24 }}>
-              <button onClick={() => setPage(3)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
-              <button disabled={!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC} onClick={() => setPage(5)} style={btnStyle(!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC)}>Suivant →</button>
+              <button onClick={() => setPage(2)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
+              <button disabled={!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC} onClick={() => setPage(4)} style={btnStyle(!coal0||!coal1||!coal2||!coal3||!coal4||!coalA||!coalB||!coal5||!coalC)}>Suivant →</button>
             </div>
           </div>
         )}
@@ -423,14 +423,14 @@ export default function App() {
             <textarea value={feedback} onChange={e => setFeedback(e.target.value)} placeholder="Vous pouvez répondre librement ici..." style={{ ...inputStyle, minHeight:140, resize:"vertical", lineHeight:1.6 }} />
             <p style={{ fontSize:14, color:"#8b8fa8", marginTop:20 }}>Merci beaucoup d'avoir rempli ce questionnaire ! 🎉</p>
             <div style={{ display:"flex", gap:12, marginTop:24 }}>
-              <button onClick={() => setPage(4)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
+              <button onClick={() => setPage(3)} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
               <button onClick={handleSubmit} disabled={saving} style={btnStyle(saving)}>{saving?"Enregistrement...":"Envoyer mes réponses 🚀"}</button>
             </div>
           </div>
         )}
 
-        {/* PAGE 6 — Done */}
-        {page === 6 && (
+        {/* PAGE 5 — Done */}
+        {page === 5 && (
           <div style={{ textAlign:"center", padding:"20px 0" }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🎓</div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:26, color:"#1a1a2e" }}>Merci !</h2>
