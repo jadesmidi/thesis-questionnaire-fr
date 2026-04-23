@@ -229,6 +229,116 @@ function AdminView({ onBack }) {
   );
 }
 
+// ─── Ideal Coalition Page ────────────────────────────────────────────────────
+
+const PARTY_COLORS = ["#6366f1","#f59e0b","#10b981","#ef4444","#3b82f6","#8b5cf6","#ec4899","#14b8a6"];
+
+function PieChart({ slices }) {
+  const size = 220, cx = size/2, cy = size/2, r = 90, inner = 44;
+  let cumAngle = -Math.PI/2;
+  const paths = slices.map(({ pct, color }, i) => {
+    if (pct <= 0) return null;
+    const angle = (pct/100)*2*Math.PI;
+    const x1=cx+r*Math.cos(cumAngle), y1=cy+r*Math.sin(cumAngle);
+    cumAngle += angle;
+    const x2=cx+r*Math.cos(cumAngle), y2=cy+r*Math.sin(cumAngle);
+    const xi1=cx+inner*Math.cos(cumAngle-angle), yi1=cy+inner*Math.sin(cumAngle-angle);
+    const xi2=cx+inner*Math.cos(cumAngle), yi2=cy+inner*Math.sin(cumAngle);
+    const large = angle > Math.PI ? 1 : 0;
+    return <path key={i} d={`M ${xi1} ${yi1} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${inner} ${inner} 0 ${large} 0 ${xi1} ${yi1} Z`} fill={color} stroke="white" strokeWidth="2" />;
+  });
+  const total = slices.reduce((s,sl) => s+sl.pct, 0);
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {total===0 ? <circle cx={cx} cy={cy} r={r} fill="#e2e4ef" /> : paths}
+      <circle cx={cx} cy={cy} r={inner} fill="white" />
+      <text x={cx} y={cy-6} textAnchor="middle" fontSize="13" fontFamily="'DM Sans',sans-serif" fill="#1a1a2e" fontWeight="700">{Math.round(total)}%</text>
+      <text x={cx} y={cy+10} textAnchor="middle" fontSize="10" fontFamily="'DM Sans',sans-serif" fill="#8b8fa8">alloué</text>
+    </svg>
+  );
+}
+
+function IdealCoalitionPage({ parties, idealCoalition, setIdealCoalition, onBack, onNext, btnStyle }) {
+  const selected = Object.keys(idealCoalition);
+  const total = selected.reduce((s,p) => s+(idealCoalition[p]||0), 0);
+  const remaining = Math.max(0, 100-total);
+
+  const toggleParty = (party) => {
+    if (idealCoalition[party] !== undefined) {
+      const next = {...idealCoalition}; delete next[party]; setIdealCoalition(next);
+    } else {
+      setIdealCoalition(prev => ({...prev,[party]:0}));
+    }
+  };
+  const setPercent = (party, val) => {
+    setIdealCoalition(prev => ({...prev,[party]:Math.max(0,Math.min(100,Number(val)))}));
+  };
+  const distribute = () => {
+    const keys = Object.keys(idealCoalition); if(!keys.length) return;
+    const each = Math.floor(100/keys.length), rem = 100-each*keys.length;
+    const next = {}; keys.forEach((k,i) => { next[k]=each+(i===0?rem:0); }); setIdealCoalition(next);
+  };
+  const slices = parties.filter(p => idealCoalition[p]!==undefined && idealCoalition[p]>0).map(p => ({ pct:idealCoalition[p], color:PARTY_COLORS[parties.indexOf(p)%PARTY_COLORS.length] }));
+
+  return (
+    <div>
+      <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:22, color:"#1a1a2e", marginTop:0 }}>Votre Coalition Idéale</h2>
+      <p style={{ color:"#8b8fa8", fontSize:14, lineHeight:1.6, marginBottom:20 }}>Quels partis aimeriez-vous voir dans une coalition gouvernementale idéale ? Sélectionnez les partis et attribuez un pourcentage d'influence à chacun. Le total doit être égal à 100%.</p>
+      <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:20 }}>
+        {parties.map((party, i) => {
+          const isSelected = idealCoalition[party] !== undefined;
+          const color = PARTY_COLORS[i%PARTY_COLORS.length];
+          return (
+            <div key={party} style={{ borderRadius:10, border:`2px solid ${isSelected?color:"#e2e4ef"}`, background:isSelected?"#fafafe":"white", overflow:"hidden", transition:"all 0.2s" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", cursor:"pointer" }} onClick={() => toggleParty(party)}>
+                <div style={{ width:18, height:18, borderRadius:4, border:`2px solid ${isSelected?color:"#d0d3e8"}`, background:isSelected?color:"white", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, transition:"all 0.2s" }}>
+                  {isSelected && <span style={{ color:"white", fontSize:11, fontWeight:900 }}>✓</span>}
+                </div>
+                <span style={{ fontFamily:"'DM Sans',sans-serif", fontWeight:600, fontSize:14, color:"#1a1a2e", flex:1 }}>{party}</span>
+                {isSelected && <span style={{ fontFamily:"'DM Mono',monospace", fontSize:13, fontWeight:700, color }}>{idealCoalition[party]}%</span>}
+              </div>
+              {isSelected && (
+                <div style={{ padding:"0 16px 14px" }}>
+                  <input type="range" min="0" max="100" value={idealCoalition[party]} onChange={e => setPercent(party, e.target.value)} style={{ width:"100%", accentColor:color, cursor:"pointer" }} />
+                  <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:"#b0b3c8", fontFamily:"'DM Mono',monospace", marginTop:2 }}>
+                    <span>0%</span><span>50%</span><span>100%</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {selected.length > 0 && (
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:16, marginBottom:24 }}>
+          <PieChart slices={slices} />
+          <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center" }}>
+            {parties.filter(p => idealCoalition[p]!==undefined).map(p => (
+              <span key={p} style={{ display:"flex", alignItems:"center", gap:5, fontSize:12, fontFamily:"'DM Sans',sans-serif", fontWeight:600, color:"#1a1a2e" }}>
+                <span style={{ width:10, height:10, borderRadius:2, background:PARTY_COLORS[parties.indexOf(p)%PARTY_COLORS.length], display:"inline-block" }} />
+                {p} ({idealCoalition[p]}%)
+              </span>
+            ))}
+          </div>
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+            <span style={{ fontFamily:"'DM Mono',monospace", fontSize:13, fontWeight:700, color:total===100?"#16a34a":total>100?"#dc2626":"#f59e0b" }}>
+              Total : {Math.round(total)}% {total===100?"✓":total>100?"— trop élevé !":`— encore ${Math.round(remaining)}% à allouer`}
+            </span>
+            <button onClick={distribute} style={{ padding:"6px 14px", borderRadius:8, border:"2px solid #6366f1", background:"white", color:"#6366f1", fontFamily:"'DM Sans',sans-serif", fontWeight:600, fontSize:12, cursor:"pointer" }}>
+              Répartir équitablement
+            </button>
+          </div>
+        </div>
+      )}
+      <div style={{ display:"flex", gap:12, marginTop:8 }}>
+        <button onClick={onBack} style={{ ...btnStyle(false), background:"white", color:"#6366f1", border:"2px solid #6366f1", boxShadow:"none" }}>← Retour</button>
+        <button onClick={onNext} style={btnStyle(false)}>Suivant →</button>
+      </div>
+      <p style={{ fontSize:12, color:"#b0b3c8", marginTop:8, fontFamily:"'DM Sans',sans-serif" }}>Cette question est optionnelle — vous pouvez continuer sans sélectionner de partis.</p>
+    </div>
+  );
+}
+
 // ─── Main App ────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState(0);
@@ -258,6 +368,7 @@ export default function App() {
   const [coalC, setCoalC] = useState("");
   const [coalD, setCoalD] = useState(""); // {1, c} vs {2, 3}
   const [coalE, setCoalE] = useState(""); // {1: 70%, c: 30%} vs {2: 50%, 3: 50%}
+  const [idealCoalition, setIdealCoalition] = useState({});
   const [feedback, setFeedback] = useState("");
 
   const r = ranking;
@@ -274,7 +385,7 @@ export default function App() {
 
   const handleSubmit = async () => {
     setSaving(true);
-    await saveResponse({ age, background, lastVote, lastVoteOther, voteCommentaire, familiarite, ranking, approvals, c_party: c, coal_attention:coal0, coal_1:coal1, coal_2:coal2, coal_3:coal3, coal_4:coal4, coal_A:coalA, coal_B:coalB, coal_5:coal5, coal_C:coalC, coal_D:coalD, coal_E:coalE, feedback });
+    await saveResponse({ age, background, lastVote, lastVoteOther, voteCommentaire, familiarite, ranking, approvals, c_party: c, coal_attention:coal0, coal_1:coal1, coal_2:coal2, coal_3:coal3, coal_4:coal4, coal_A:coalA, coal_B:coalB, coal_5:coal5, coal_C:coalC, coal_D:coalD, coal_E:coalE, idealCoalition, feedback });
     setSaving(false);
     setPage(6);
   };
