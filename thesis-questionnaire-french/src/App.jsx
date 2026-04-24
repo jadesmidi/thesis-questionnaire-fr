@@ -518,7 +518,7 @@ export default function App() {
             <p style={{ fontWeight:700, fontSize:15, color:"#1a1a2e", marginBottom:20 }}>Quel ensemble de partis préféreriez-vous dans la coalition ?</p>
 
             <CoalitionChoice question={`Question 0 : {${r[0]}, ${r[1]}} ou {${r[2]}, ${r[3]}} ?`} optionA={`{${r[0]}, ${r[1]}}`} optionB={`{${r[2]}, ${r[3]}}`} value={coal0} onChange={setCoal0} />
-            <div style={{ borderTop:"1px solid #eee", paddingTop:20, marginTop:4 }}>
+            <div>
               <CoalitionChoice question={`Question 1 : {${r[0]}} ou {${r[1]}, ${r[2]}, ${r[3]}} ?`} optionA={`{${r[0]}}`} optionB={`{${r[1]}, ${r[2]}, ${r[3]}}`} value={coal1} onChange={setCoal1} />
               <CoalitionChoice question={`Question 2 : {${r[0]}, ${r[1]}, ${r[2]}} ou {${r[0]}, ${r[1]}} ?`} optionA={`{${r[0]}, ${r[1]}, ${r[2]}}`} optionB={`{${r[0]}, ${r[1]}}`} value={coal2} onChange={setCoal2} />
               <CoalitionChoice question={`Question 3 : {${r[0]}, ${r[2]}} ou {${r[1]}} ?`} optionA={`{${r[0]}, ${r[2]}}`} optionB={`{${r[1]}}`} value={coalA} onChange={setCoalA} />
@@ -533,7 +533,7 @@ export default function App() {
             </div>
 
             {c && (
-              <div style={{ borderTop:"1px solid #eee", paddingTop:24, marginTop:8 }}>
+              <div>
                 <CoalitionChoice
                   question={`Question 9 : {${r[0]}: 70%, ${c}: 30%} ou {${r[1]}: 50%, ${r[2]}: 50%} ?`}
                   optionA={`{${r[0]}: 70%, ${c}: 30%}`}
